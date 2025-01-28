@@ -1,9 +1,11 @@
 from flask import Flask, request, render_template
+import matplotlib
 from markupsafe import escape
 import matplotlib.pyplot as plt
 import numpy as np
 
 app = Flask(__name__)
+matplotlib.use('Agg')  # Use a non-GUI backend
 
 @app.route("/")
 def hello_world():
@@ -44,14 +46,14 @@ def plot():
         x = np.linspace(x_left, x_right, 100)
         func_names = request.form.getlist('func')
         colors = request.form.getlist('color')
-        separate = request.form.get('separate', 'off') == 'on'
+        separate = request.form.get('separate')
 
         image_paths = []
         # print(func_names)
         # print(separate)
         # print(colors)
 
-        if separate:
+        if separate == 'on':
             for i, func in enumerate(func_names):
                 y = graph(func, x)
                 plt.plot(x, y, color=colors[i])
