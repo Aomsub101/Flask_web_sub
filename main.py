@@ -1,7 +1,5 @@
-from flask import Flask
+from flask import Flask, request, render_template
 from markupsafe import escape
-from flask import render_template
-from flask import request
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -25,33 +23,59 @@ def get_sum(num1, num2):
     result = num1**2 + num2**2
     return render_template('calculate.html', result=result)
 
+
+def graph(func_name, x):
+    if func_name == 'sine':
+        return np.sin(x)
+    elif func_name == 'cosine':
+        return np.cos(x)
+    elif func_name == 'tangent':
+        return np.tan(x)
+    elif func_name == 'square':
+        return x ** 2
+    else:
+        return np.sqrt(x)
+
 @app.route("/plot", methods=["GET", "POST"])
 def plot():
     if request.method == "POST":
         x_left = int(request.form['xleft'])
         x_right = int(request.form['xright'])
         x = np.linspace(x_left, x_right, 100)
+        func_names = request.form.getlist('func')
+        colors = request.form.getlist('color')
+        separate = request.form.get('separate', 'off') == 'on'
 
-        if request.form['func'] == 'sine':
-            y = np.sin(x)
-        elif request.form['func'] == 'cosine':
-            y = np.cos(x)
-        elif request.form['func'] == 'tangent':
-            y = np.tan(x)
-        elif request.form['func'] == 'square':
-            y = x ** 2
+        image_paths = []
+        # print(func_names)
+        # print(separate)
+        # print(colors)
+
+        if separate:
+            for i, func in enumerate(func_names):
+                y = graph(func, x)
+                plt.plot(x, y, color=colors[i])
+                plt.xlabel('X')
+                plt.ylabel('y')
+                plt.title(f'Graph of {func} from {x_left} to {x_right}')
+                image_path = f'static/images/plot_{func}.png'
+                plt.savefig(image_path)
+                plt.close()
+                image_paths.append(image_path)
         else:
-            y = np.sqrt(x)
-        color = request.form['color']
+            for i, func in enumerate(func_names):
+                y = graph(func, x)
+                plt.plot(x, y, color=colors[i], label=func)
 
-        plt.title(f'Graph of {request.form['func']} from {x_left} to {x_right}')
-        plt.xlabel('X')
-        plt.ylabel('Y')
-        plt.plot(x, y, color=color)
-        img_path = 'static/images/plot.png'
-        plt.savefig(img_path)
-        plt.close()
-        return render_template('plotter.html', image_path=img_path)
+            image_path = 'static/images/plot.png'
+            plt.legend()
+            plt.xlabel('X')
+            plt.ylabel('Y')
+            plt.savefig(image_path)
+            plt.title(f"Graph from {x_left} to {x_right}")
+            plt.close()
+            image_paths.append(image_path)
+        return render_template('plotter.html', image_paths=image_paths)
 
     return render_template('plotter.html')
 

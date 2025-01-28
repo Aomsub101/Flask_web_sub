@@ -8,14 +8,22 @@
 <body>
     <h1>Plotting a graph with me!</h1>
     <form action="/plot" method="post">
-        <label for="func">Choose a function:</label>
-        <select id="func" name="func">
-            <option value="sine">Sine</option>
-            <option value="cosine">Cosine</option>
-            <option value="tangent">Tangent</option>
-            <option value="square">Square</option>
-            <option value="squareroot">Square Root</option>
-        </select>
+        <label for="func">Choose functions:</label><br>
+        <input type="checkbox" name="func" value="sine"> Sine <br>
+        <input type="checkbox" name="func" value="cosine"> Cosine <br>
+        <input type="checkbox" name="func" value="tangent"> Tangent <br>
+        <input type="checkbox" name="func" value="square"> Square <br>
+        <input type="checkbox" name="func" value="squareroot"> Square Root <br>
+        
+        <label for="colors">Choose colors for functions:</label><br>
+        <input type="color" name="color" required> Function 1 Color<br>
+        <input type="color" name="color"> Function 2 Color<br>
+        <input type="color" name="color"> Function 3 Color<br>
+        <input type="color" name="color"> Function 4 Color<br>
+        <input type="color" name="color"> Function 5 Color<br>
+        <br>
+        <label style="padding-bottom: 10px;" for="separate"> Plot separately: </label>
+        <input type="checkbox" id="separate" name="separate">
         <br>
         <label style="padding-bottom: 10px;" for="from_num">From:</label>
         <input type="number" id="from_num" name="xleft" required>
@@ -23,16 +31,15 @@
         <label style="padding-bottom: 10px;" for="to_num">To:</label>
         <input type="number" id="to_num" name="xright" required>
         <br>
-        <label style="padding-bottom: 10px;" for="color">Graph color:</label>
-        <input type="color" id="color" name="color" required>  
-        <br>
         <button style="width: 50px;" type="submit">Plot</button>
     </form>
-    {% if image_path %}
-        <h2>Here is your graph</h2>
-        <div style="width: 100%;">
+    {% if image_paths %}
+        <h2>Here is your graph:</h2>
+        {% for image_path in image_paths %}
+        <div>
             <img src="{{ image_path }}">
         </div>
+        {% endfor %}
     {% endif%}
 </body>
 </html>
