@@ -2,12 +2,10 @@ from flask import Flask
 from markupsafe import escape
 from flask import render_template
 from flask import request
-import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
 app = Flask(__name__)
-matplotlib.use('Agg')
 
 @app.route("/")
 def hello_world():
@@ -51,7 +49,7 @@ def plot():
         plt.plot(x, y)
         img_path = 'static/images/plot.png'
         plt.savefig(img_path)
-
+        plt.close()
         return render_template('plotter.html', image_path=img_path)
 
     return render_template('plotter.html')
