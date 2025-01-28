@@ -42,11 +42,12 @@ def plot():
             y = x ** 2
         else:
             y = np.sqrt(x)
+        color = request.form['color']
 
         plt.title(f'Graph of {request.form['func']} from {x_left} to {x_right}')
         plt.xlabel('X')
         plt.ylabel('Y')
-        plt.plot(x, y)
+        plt.plot(x, y, color=color)
         img_path = 'static/images/plot.png'
         plt.savefig(img_path)
         plt.close()
