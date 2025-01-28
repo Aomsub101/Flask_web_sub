@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plotting</title>
+</head>
+<body>
+    <h1>Plotting a graph with me!</h1>
+    <form action="/plot" method="post">
+        <label for="func">Choose a function:</label>
+        <select id="func" name="func">
+            <option value="sine">Sine</option>
+            <option value="cosine">Cosine</option>
+            <option value="tangent">Tangent</option>
+            <option value="square">Square</option>
+            <option value="squareroot">Square Root</option>
+        </select>
+        <br>
+        <label style="padding-bottom: 10px;" for="from_num">From:</label>
+        <input type="number" id="from_num" name="xleft" required>
+        <br>
+        <label style="padding-bottom: 10px;" for="to_num">To:</label>
+        <input type="number" id="to_num" name="xright" required>
+        <br>
+        <button style="width: 50px;" type="submit">Plot</button>
+    </form>
+    {% if image_path %}
+        <h2>Here is your graph</h2>
+        <div style="width: 100%;">
+            <img src="{{ image_path }}">
+        </div>
+    {% endif%}
+</body>
+</html>
